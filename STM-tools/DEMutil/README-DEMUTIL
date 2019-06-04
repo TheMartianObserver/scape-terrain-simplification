@@ -1,0 +1,120 @@
+I obtained these files via anonymous ftp from:
+
+	spectrum.xerox.com:/pub/map/dem/source/demutil
+
+
+-Michael Garland
+
+------------------------------------------------------------------------
+
+convert.c and demtoflat.c are two utilities written in 'C', adn may be
+useful in the use of USGS DEM data sets.  These were written in the
+most portable form of 'C' I could generate and should compile with no
+problem on most systems.  They have been tested on GCC on a SUN SS1+
+and on the 32-bit GNUish djgpp.  Please note that a flat memory model
+is required for demtoflat.c - as it will allocate up to a 1 Meg array!
+Sorry 16-bit DOS users - try using djgpp from sun.soe.clarkson.edu.
+
+What do they do?
+Convert.c simply takes a standard USGS DEM file and converts it into a
+more program friendly format, namely for programs written in 'C'.
+First, it elimiates the D+ exponential format of the FORTRAN which
+generated the files and makes it a more universal E+ exponential
+format.
+
+Next, it strips much of the junk - leaving enough to have coordinates
+and the data.  The format is as follows:
+x1 UTM coordinate   {maintained in USGS sequence = see USGS DATA USERS GUIDE}
+y1 UTM coordinate
+.
+.
+x4 UTM coordinate
+y4 UTM coordinate
+minimum elevation
+maximum elevation
+number of profiles in the DEM
+------------- that consititutes the header --------------------
+profile number      { begins with profile #1}
+number of data points in profile 
+starting x and y UTM coordinates
+data #1
+data #2
+.
+.
+.
+data #last point in profile
+profile number
+.
+.
+.
+
+There is no footer - and all in in ascii format.
+To read into, functions such as fscanf("%d", &value); should work
+fine!
+
+Once you compile it, you can specify a filename as an argument, such
+as:
+convert testdem
+in which this would eventually produce the file testdem.dat - which
+will be in the above format.
+Or, if you do not specify a filename in the arguments, it will prompt
+you for one.
+
+DEMTOFLAT
+This is perhaps the most useful of the two programs - though you need
+convert to run this one.  The program takes a file produced by convert
+and outputs a flatfile.  This allows a DEM to be easily read by most
+image processing, spreadsheets, etc. (I wrote this to import data in
+MATLAB 4.0B).  The key to this program is that it works to minimize
+the distortion brought on by the fact that the DEM follows UTM
+coordinates, but is clipped by the geographic coordinates defining the
+corresponding Quadrangle.  Mainly, the program assigns areas not
+within the actual DEM a value associated with it's closest neighbour.
+This creates a planar effect along the edges - but is certainly better
+than generation of an arbitary 'wall'.
+
+However, in order to generate a decent conversion from the skewed mess
+of the native DEM to a flat file, the user must provide a skew factor.
+This simply is a fractional value between 0 and 1 indicating what
+proportion to the eastern edge to start making the needed adjustments.
+I recommend a value of .95 or .98.  Please note that if you assign a
+value which is too low, you will get inverted blocks of topography - a
+function that even in the middle of a DEM, not all profiles are equal
+length.
+
+There is an easy fix - but with little time to do this - I figured
+that providing an estimated skew value would suffice for my needs - it
+does.
+
+I will certainly fix this as soon as I have time, but until then - any
+ambitious user would probably be able to make a quick fix - and send
+me a copy of the fix -- please :-)
+
+Now - to use this one....
+Once you run it, it will prompt you for an input file name - remeber
+that the DEM must be run through convert first!
+
+Then it prompts you for an output filename and a skew factor.
+After that it churns it's wheels for a while and keeps you updated on
+what it is doing.  It then outputs your SPACE separated ascii flat
+file.  If you desparately need some other type of data separator, find
+the line with something like: fprintf( f1, "%d ", dem[cx][cy]) and
+change it to fprintf( f1, "%d,", dem[cx][cy]) or what ever you need.
+
+I hope these basic utilities help those who would like to dig through
+these DEMs but are not into picking through the USGS DATA USERS GUIDE.
+
+If you use these, please send me a note to say that you are - and any
+comments regarding them.  I certainly am not charging anything for
+these and you can use the code as freely as you want!
+Nice change, eh!
+
+Cheers
+Christopher Keane
+Research Associate
+Joint Education Initiative
+3433 A.V. Williams
+University of Maryland
+College Park, Maryland 20742
+(301) 405-2324
+keane@earthsun.umd.edu

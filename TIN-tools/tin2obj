@@ -1,0 +1,45 @@
+#!/usr/local/bin/perl -w
+
+#
+# This script converts TIN output files into Wavefront .OBJ
+#
+# At the moment, it is incredibly simple minded.  In particular, it
+# makes no attemp to achieve vertex sharing.
+#
+
+while(<>)
+{
+    chop;
+
+    @face = split;
+
+    $v1 = 
+    $v2 = 
+    $v3 =
+
+    push @verts, "$face[1] $face[2] $face[3]";
+    push @verts, "$face[4] $face[5] $face[6]";
+    push @verts, "$face[7] $face[8] $face[9]";
+
+    #
+    # These offsets may seem kind of weird.
+    # It's because OBJ files number vertices starting from 1.
+    $v3 = $#verts+1;
+    $v2 = $#verts;
+    $v1 = $#verts-1;
+
+
+    push @faces, "$v1 $v2 $v3";
+}
+
+
+
+foreach $vert (@verts)
+{
+    print "v $vert\n";
+}
+
+foreach $face (@faces)
+{
+    print "f $face\n";
+}

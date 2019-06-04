@@ -1,0 +1,34 @@
+This is the "next generation" of DEMtoFlat.  This program uses the
+intermediate files generated in the demutils, but then resamples them
+using a nearest-8 log weight resampling procedure.  This maximizes the
+areal extent of the DEM to conform with UTM-based boundaries.
+Personal experience has been showing that this procedure gives
+extremely close approximations to the original file.
+
+I find this program infinitely better than the original DEMtoFlat, but
+it is also infinitely slower!  On a dedicated DEC ALPHA machine, one
+resampling took 26 minutes, on a moderately loaded Sun ss1+ with 16
+Meg RAM, it took nearly a day.  
+
+A sorting algo for the data is the only way to speed this up, when I
+get the time I may implement this.  One key in this program is that it
+can be easily modified to "suture" multiple adjacent DEM's together.
+It shouldn't require more than 3 or 4 added lines of code and 3 or 4
+modifications to the existing code.
+
+Again, I tried my best to make this as totally portable as possible.
+It has been tested under OSF/1, SUNOS 4.x, Linux 0.99pl9, DJGPP 1.10
+for DOS.
+
+Hope this is useful.  As before, use it, distribute it, whatever, but
+I would appreciate EMail that you are using it so I know how many are
+using it and for what uses -- perhaps as an impetus to make more
+improvements.
+
+Cheers
+Christopher Keane
+Joint Education Initiative
+University of Maryland
+3433 AV Williams
+College Park, MD 20742
+keane@earthsun.umd.edu

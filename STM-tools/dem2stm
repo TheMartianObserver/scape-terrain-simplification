@@ -1,0 +1,7 @@
+#!/bin/sh
+
+temp=${1}.dat
+
+convert $1 > /dev/null
+flat2stm < $temp > $1.stm
+/bin/rm -f $temp
